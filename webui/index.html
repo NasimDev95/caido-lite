@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Caido Lite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-shield-halved"></i></span>
+        <span class="brand-name">Caido <em>Lite</em></span>
+      </div>
+      <div class="topbar-center">
+        <span class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">Checking</span></span>
+        <span class="muted small" id="proxyAddr"></span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" id="toggleProxy" title="Start or stop the proxy">
+          <i class="fa-solid fa-power-off"></i><span>Start</span>
+        </button>
+        <button class="btn btn-ghost icon-only" id="refreshBtn" title="Refresh">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="sidebar" aria-label="Main">
+      <button class="nav-item active" data-view="history" title="HTTP History">
+        <i class="fa-solid fa-clock-rotate-left"></i><span>HTTP History</span>
+      </button>
+      <button class="nav-item" data-view="intercept" title="Intercept">
+        <i class="fa-solid fa-hand"></i><span>Intercept</span>
+        <span class="nav-badge" id="interceptBadge" hidden>0</span>
+      </button>
+      <button class="nav-item" data-view="replay" title="Replay">
+        <i class="fa-solid fa-rotate-right"></i><span>Replay</span>
+      </button>
+      <button class="nav-item" data-view="certs" title="Certificate">
+        <i class="fa-solid fa-certificate"></i><span>Certificate</span>
+      </button>
+      <button class="nav-item" data-view="settings" title="Settings">
+        <i class="fa-solid fa-gear"></i><span>Settings</span>
+      </button>
+    </nav>
+
+    <main class="content">
+      <!-- HTTP History -->
+      <section class="view active" id="view-history">
+        <div class="toolbar">
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="searchInput" type="search" placeholder="Search URL, host or path" autocomplete="off">
+          </div>
+          <select id="methodFilter" aria-label="Method">
+            <option value="">All methods</option>
+            <option>GET</option><option>POST</option><option>PUT</option>
+            <option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option>
+          </select>
+          <button class="btn btn-ghost" id="clearBtn" title="Clear history">
+            <i class="fa-solid fa-trash-can"></i><span>Clear</span>
+          </button>
+          <span class="muted small" id="countText"></span>
+        </div>
+
+        <div class="split">
+          <div class="table-wrap">
+            <table class="history">
+              <thead>
+                <tr>
+                  <th class="col-id">#</th>
+                  <th class="col-method">Method</th>
+                  <th>Host</th>
+                  <th>Path</th>
+                  <th class="col-status">Status</th>
+                  <th class="col-len">Length</th>
+                  <th class="col-time">Time</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody"></tbody>
+            </table>
+            <div class="empty" id="emptyState" hidden>
+              <i class="fa-solid fa-inbox"></i>
+              <p>No traffic yet. Point a browser at the proxy and browse.</p>
+            </div>
+          </div>
+
+          <div class="detail" id="detail" hidden>
+            <div class="detail-head">
+              <div class="detail-title">
+                <span class="method-badge" id="dMethod"></span>
+                <span class="mono ellipsis" id="dUrl"></span>
+              </div>
+              <div class="detail-meta small muted" id="dMeta"></div>
+              <button class="btn btn-ghost icon-only" id="sendToReplay" title="Send to Replay">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+              <button class="btn btn-ghost icon-only" id="closeDetail" title="Close">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="panes">
+              <div class="pane">
+                <div class="pane-title"><i class="fa-solid fa-arrow-up-from-bracket"></i> Request</div>
+                <pre class="code" id="dReq"></pre>
+              </div>
+              <div class="pane">
+                <div class="pane-title"><i class="fa-solid fa-arrow-down-to-bracket"></i> Response</div>
+                <pre class="code" id="dResp"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Intercept -->
+      <section class="view" id="view-intercept">
+        <div class="toolbar">
+          <label class="switch" title="Hold new requests until you forward or drop them">
+            <input type="checkbox" id="iSwitch">
+            <span class="slider"></span>
+          </label>
+          <span class="small" id="iState">Intercept off</span>
+          <div class="search scope">
+            <i class="fa-solid fa-filter"></i>
+            <input id="iScope" type="search" placeholder="Scope: only URLs containing... (empty = all)" autocomplete="off">
+          </div>
+          <span class="muted small" id="iCount">Nothing held</span>
+        </div>
+
+        <div class="split intercept-split">
+          <div class="queue">
+            <div class="pane-title"><i class="fa-solid fa-list"></i> Held requests</div>
+            <div id="iQueue" class="queue-list"></div>
+            <div class="empty" id="iEmpty">
+              <i class="fa-solid fa-hand"></i>
+              <p>No held requests. Turn Intercept on, then browse.</p>
+            </div>
+          </div>
+
+          <div class="detail intercept-detail">
+            <div class="detail-head">
+              <div class="detail-title">
+                <span id="iTitle" class="method-badge">Select a held request</span>
+                <span class="mono ellipsis small" id="iUrl"></span>
+              </div>
+            </div>
+            <div class="pane editor-pane">
+              <div class="pane-title"><i class="fa-solid fa-pen"></i> Edit raw request. Ctrl+Enter forwards.</div>
+              <textarea class="code editor" id="iEditor" spellcheck="false" disabled></textarea>
+            </div>
+            <div class="intercept-actions" id="iActions">
+              <button class="btn btn-primary" id="iForward" disabled>
+                <i class="fa-solid fa-play"></i><span>Forward</span>
+              </button>
+              <button class="btn btn-danger" id="iDrop" disabled>
+                <i class="fa-solid fa-ban"></i><span>Drop</span>
+              </button>
+              <button class="btn btn-ghost" id="iReset" disabled>
+                <i class="fa-solid fa-arrow-rotate-left"></i><span>Reset edits</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Replay -->
+      <section class="view" id="view-replay">
+        <div class="toolbar">
+          <select id="rScheme" aria-label="Scheme">
+            <option value="https">https</option>
+            <option value="http">http</option>
+          </select>
+          <input id="rHost" class="input-host" placeholder="host" autocomplete="off">
+          <input id="rPort" class="input-port" placeholder="443" inputmode="numeric" autocomplete="off">
+          <button class="btn btn-primary" id="sendReplay">
+            <i class="fa-solid fa-paper-plane"></i><span>Send</span>
+          </button>
+          <span class="muted small" id="replayStatus"></span>
+        </div>
+        <div class="panes replay-panes">
+          <div class="pane">
+            <div class="pane-title"><i class="fa-solid fa-pen"></i> Raw request</div>
+            <textarea class="code editor" id="rRaw" spellcheck="false" placeholder="GET /path HTTP/1.1&#10;Host: example.com&#10;&#10;"></textarea>
+          </div>
+          <div class="pane">
+            <div class="pane-title"><i class="fa-solid fa-arrow-down-to-bracket"></i> Response</div>
+            <pre class="code" id="rResp"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Certificate -->
+      <section class="view" id="view-certs">
+        <div class="card">
+          <h2><i class="fa-solid fa-certificate"></i> Root certificate</h2>
+          <p class="muted">Caido Lite signs every HTTPS site it intercepts with this local root CA. Install it on the device that uses the proxy, otherwise browsers will show certificate warnings.</p>
+          <div class="row">
+            <a class="btn btn-primary" href="/api/ca" download="caido-lite-ca.crt">
+              <i class="fa-solid fa-download"></i><span>Download CA</span>
+            </a>
+            <button class="btn btn-ghost" id="copyCaUrl">
+              <i class="fa-solid fa-link"></i><span>Copy proxy URL for CA</span>
+            </button>
+          </div>
+          <h3>Android (Termux)</h3>
+          <ol class="steps">
+            <li>Run <code>python main.py --export-ca</code> in Termux.</li>
+            <li>Open Settings, Security, Encryption and credentials, Install a certificate, CA certificate.</li>
+            <li>Pick <code>caido-lite-ca.crt</code> from Downloads and confirm.</li>
+            <li>Set the Wi-Fi or browser proxy to <code>127.0.0.1:8080</code>.</li>
+          </ol>
+          <h3>Desktop browser</h3>
+          <p class="muted">Import the downloaded file into the browser or OS trust store as a trusted root authority.</p>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="view" id="view-settings">
+        <div class="card">
+          <h2><i class="fa-solid fa-gear"></i> Proxy</h2>
+          <dl class="kv">
+            <dt>Listening on</dt><dd class="mono" id="sAddr">-</dd>
+            <dt>TLS interception</dt><dd id="sMitm">-</dd>
+            <dt>Web UI port</dt><dd class="mono" id="sUi">-</dd>
+            <dt>Stored transactions</dt><dd class="mono" id="sCount">-</dd>
+          </dl>
+          <p class="muted small">Change ports or enable LAN access with command line flags, for example <code>python main.py --proxy-port 8888 --lan</code>.</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="intercept.js"></script>
+</body>
+</html>
