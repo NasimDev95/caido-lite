@@ -1,52 +1,41 @@
-<div align="center">
+<p align="center">
+  <img src="https://img.shields.io/badge/Caido%20Lite-1.2.0-orange?style=for-the-badge" alt="Caido Lite 1.2.0">
+</p>
 
-# Caido Lite
+<h1 align="center">Caido Lite</h1>
 
-**An intercepting HTTP/HTTPS proxy with a Caido-style web UI that runs on Android, inside Termux.**
+<p align="center">
+  <b>An intercepting HTTP/HTTPS proxy with a Caido-style web UI that runs on Android, inside Termux.</b>
+</p>
 
-Inspect, hold, edit, replay and export web traffic from your phone. No laptop needed.
+<p align="center">
+  Inspect, hold, edit, replay and export web traffic from your phone. No laptop needed.
+</p>
 
-[
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white" alt="Python 3"></a>
+  <a href="https://termux.dev"><img src="https://img.shields.io/badge/platform-Android%20(Termux)-3DDC84?logo=android&logoColor=white" alt="Platform: Android (Termux)"></a>
+  <a href="#features"><img src="https://img.shields.io/badge/dependencies-none-brightgreen" alt="No dependencies"></a>
+  <a href="https://github.com/NasimDev95/caido-lite/stargazers"><img src="https://img.shields.io/github/stars/NasimDev95/caido-lite?style=social" alt="GitHub stars"></a>
+  <a href="https://github.com/NasimDev95/caido-lite/commits"><img src="https://img.shields.io/github/last-commit/NasimDev95/caido-lite" alt="Last commit"></a>
+</p>
 
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#setup-guide-step-by-step">Setup guide</a> ·
+  <a href="#downloads">Downloads</a> ·
+  <a href="#troubleshooting">Troubleshooting</a> ·
+  <a href="#contributing">Contributing</a>
+</p>
 
-](LICENSE)
-[
+---
 
-![Version](https://img.shields.io/badge/version-1.2.0-orange.svg)
+Caido Lite is a small intercepting proxy for Android. It runs as a Python program inside Termux and gives you a web UI that works on a phone screen. You can record traffic, hold requests and edit them before they leave the device, replay them, and export the history as HAR.
 
-](#)
-[
+> **Use it only on devices and networks you own, or for authorized testing.** Caido Lite is an independent open-source project. It is not affiliated with, endorsed by, or sponsored by Caido Labs.
 
-![Python](https://img.shields.io/badge/Python-3-blue.svg)
-
-](https://www.python.org/)
-[
-
-![Platform](https://img.shields.io/badge/platform-Android%20%28Termux%29-3DDC84.svg)
-
-](https://termux.dev)
-[
-
-![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen.svg)
-
-](#features)
-[
-
-![GitHub stars](https://img.shields.io/github/stars/NasimDev95/caido-lite?style=social)
-
-](https://github.com/NasimDev95/caido-lite)
-[
-
-![Last commit](https://img.shields.io/github/last-commit/NasimDev95/caido-lite)
-
-](https://github.com/NasimDev95/caido-lite/commits)
-
-[Quick start](#quick-start) · [Setup guide](#setup-guide-step-by-step) · [Downloads](#downloads) · [Troubleshooting](#troubleshooting) · [Contributing](#contributing)
-
-</div>
-
-> Caido Lite is an independent open-source project. It is not affiliated with, endorsed by, or sponsored by Caido Labs.
+---
 
 ## Why Caido Lite?
 
@@ -57,47 +46,33 @@ Caido and Burp Suite are built for desktops. Caido Lite brings the same workflow
 - **Phone-first UI.** Bottom navigation, full-screen details, touch-friendly controls.
 - **Small and readable.** Each file has one job, so you can learn how an intercepting proxy works by reading it.
 
-## Table of contents
-
-- [Features](#features)
-- [How it works](#how-it-works)
-- [Downloads](#downloads)
-- [Requirements](#requirements)
-- [Quick start](#quick-start)
-- [Setup guide (step by step)](#setup-guide-step-by-step)
-- [Command-line options](#command-line-options)
-- [Using the UI](#using-the-ui)
-- [Troubleshooting](#troubleshooting)
-- [Project structure](#project-structure)
-- [Security and legal use](#security-and-legal-use)
-- [Limitations](#limitations)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
+---
 
 ## Features
 
 - **HTTP and HTTPS interception** (TLS MITM) with per-site certificates signed by a local root CA. Works even when a client connects by IP and sends SNI.
-- **Intercept**: hold requests, edit the raw text (method, path, headers, body), then forward or drop. Optional URL scope. Unanswered requests are forwarded automatically after 10 minutes.
-- **HTTP History**: live list with search, status filters (2xx to 5xx, errors), method and source filters, and paging.
-- **Request detail**: raw or pretty view of requests and responses, gzip, deflate and chunked decoding for display, copy as cURL, copy raw, download body, delete a row.
-- **Replay**: edit a raw request, resend it, and reuse recent replays.
+- **Intercept.** Hold requests, edit the raw text (method, path, headers, body), then forward or drop. Optional URL scope. Unanswered requests are forwarded automatically after 10 minutes.
+- **HTTP History.** Live list with search, status filters (2xx to 5xx, errors), method and source filters, and paging.
+- **Request detail.** Raw or pretty view of requests and responses, gzip, deflate and chunked decoding for display, copy as cURL, copy raw, download body, delete a row.
+- **Replay.** Edit a raw request, resend it, and reuse recent replays.
 - **HAR 1.2 export** for import into other tools.
-- **Certificate page**: download the root CA and follow the Android install steps.
-- **Settings**: proxy status, LAN address, theme (system, dark, light), refresh rate, clear history.
-- **Mobile-first UI**: bottom navigation on phones, split history and detail view on tablets and desktops, Font Awesome icons, dark and light themes.
-- **WebSocket and Upgrade passthrough**: after a `101 Switching Protocols` response, the connection is relayed as a raw pipe.
-- **Safer web UI**: the API accepts only JSON POST requests, and Host headers other than localhost are rejected. This blocks cross-site form requests and DNS rebinding.
+- **Certificate page.** Download the root CA and follow the Android install steps.
+- **Settings.** Proxy status, LAN address, theme (system, dark, light), refresh rate, clear history.
+- **Mobile-first UI.** Bottom navigation on phones, split history and detail view on tablets and desktops, Font Awesome icons, dark and light themes.
+- **WebSocket and Upgrade passthrough.** After a `101 Switching Protocols` response, the connection is relayed as a raw pipe.
+- **Safer web UI.** The API accepts only JSON POST requests, and Host headers other than localhost are rejected. This blocks cross-site form requests and DNS rebinding.
+
+---
 
 ## How it works
 
 ```
 Browser / app on phone
-        |
-        v
-Caido Lite proxy (127.0.0.1:8080)   <-- records, holds, edits, replays
-        |
-        v
+      │
+      ▼
+Caido Lite proxy (127.0.0.1:8080)   ← records, holds, edits, replays
+      │
+      ▼
 Internet
 ```
 
@@ -106,22 +81,28 @@ Internet
 - The web UI at `http://127.0.0.1:9090` lets you watch and control everything.
 - Optionally, the **Proxy-VPN** Android app sends all phone traffic to `http://127.0.0.1:8080`, so you do not have to set a proxy in each app.
 
+---
+
 ## Downloads
 
 | What | Link | Notes |
 |------|------|-------|
-| Termux (recommended) | https://f-droid.org/packages/com.termux/ | Install from F-Droid |
-| Termux (alternative) | https://github.com/termux/termux-app/releases | Install the APK from GitHub |
-| Proxy-VPN app | https://github.com/NasimDev95/Proxy-VPN/releases/latest | Download the APK from the latest release |
-| Caido Lite | https://github.com/NasimDev95/caido-lite | Clone the repo, or download the zip from Releases |
+| Termux (recommended) | [F-Droid](https://f-droid.org/packages/com.termux/) | Install from F-Droid |
+| Termux (alternative) | [GitHub releases](https://github.com/termux/termux-app/releases) | Install the APK from GitHub |
+| Proxy-VPN app | [Latest release](https://github.com/NasimDev95/Proxy-VPN/releases/latest) | Download the APK from the latest release |
+| Caido Lite | [Repository](https://github.com/NasimDev95/caido-lite) | Clone the repo, or download the zip from Releases |
 
 **Do not use the Termux version from the Play Store.** It is old and its packages no longer work.
+
+---
 
 ## Requirements
 
 - Android 7 or newer (Termux requirement)
 - About 100 MB of free storage
 - Termux from F-Droid or GitHub
+
+---
 
 ## Quick start
 
@@ -136,13 +117,15 @@ cd ~/caido-lite && python main.py
 
 Then open `http://127.0.0.1:9090`, install the CA (`python main.py --export-ca`), and point your traffic at `127.0.0.1:8080`.
 
+---
+
 ## Setup guide (step by step)
 
 ### Step 1: Install Termux
 
-1. Install F-Droid from https://f-droid.org, or open the Termux link above in your browser.
+1. Install F-Droid from [f-droid.org](https://f-droid.org), or open the Termux link above in your browser.
 2. Install Termux from F-Droid, or install the Termux APK from GitHub.
-3. Open Termux once. Wait until the prompt appears.
+3. Open Termux once and wait until the prompt appears.
 
 ### Step 2: Install the tools Caido Lite needs
 
@@ -249,7 +232,7 @@ Some apps ignore Wi-Fi proxy settings. Use Option 1 for those.
 1. Open the **Intercept** tab and switch it on. New requests are now held.
 2. Optional: type a scope such as `example.com` so only matching URLs are held.
 3. In Chrome, open the site. The request appears in the **Held requests** list.
-4. Select it. Edit the raw text in the editor.
+4. Select it and edit the raw text in the editor.
 5. Tap **Forward** (or press Ctrl+Enter) to send it with your changes, or **Drop** to cancel it.
 6. Switch Intercept off to release everything held.
 
@@ -267,6 +250,8 @@ Then run:
 ```bash
 caido
 ```
+
+---
 
 ## Command-line options
 
@@ -289,13 +274,17 @@ python main.py --lan                      # let another device use this proxy
 python main.py --no-mitm                  # route HTTPS without decrypting it
 ```
 
+---
+
 ## Using the UI
 
-- **History**: tap a row to open its details. On phones the detail opens full screen. Use the chips at the top to filter by status.
-- **Intercept**: hold, edit, forward or drop requests. Edited requests are saved to History with source `intercept`.
-- **Replay**: paste or edit a raw request, set scheme, host and port, then Send (Ctrl+Enter also sends). Replays are saved with source `replay`.
-- **Certificate**: download the root CA and see the install steps.
-- **Settings**: check proxy status, export the history as HAR, clear history, change theme and refresh rate.
+- **History.** Tap a row to open its details. On phones the detail opens full screen. Use the chips at the top to filter by status.
+- **Intercept.** Hold, edit, forward or drop requests. Edited requests are saved to History with source `intercept`.
+- **Replay.** Paste or edit a raw request, set scheme, host and port, then Send (Ctrl+Enter also sends). Replays are saved with source `replay`.
+- **Certificate.** Download the root CA and see the install steps.
+- **Settings.** Check proxy status, export the history as HAR, clear history, change theme and refresh rate.
+
+---
 
 ## Troubleshooting
 
@@ -328,6 +317,8 @@ Enable **Acquire wakelock** in the Termux notification, and set Termux battery u
 **Some apps show errors after I connect**
 Apps that ignore user-installed CAs will fail on HTTPS when MITM is on. Use `--no-mitm` for those sessions, or test in Chrome.
 
+---
+
 ## Project structure
 
 ```
@@ -352,20 +343,27 @@ Data is stored in `~/.caido-lite/`:
 
 Delete `~/.caido-lite/` to start fresh.
 
-## Security and legal use
+---
+
+## Security notes
 
 - The web UI binds to `127.0.0.1` only. Do not expose it to the internet. Use `--lan` only on networks you trust.
 - The root CA can decrypt HTTPS traffic on any device that trusts it. Do not share `~/.caido-lite/ca/`, and remove the CA from Android when you stop testing (**Settings > Security > Encryption & credentials > Trusted credentials**).
+- The web API rejects requests that are not JSON POST, and rejects Host headers other than localhost.
 - Use Caido Lite only on your own devices and apps, or on systems where you have written permission to test. Do not use it to access accounts or data that are not yours.
 
 To report a security issue, open a private security advisory on GitHub instead of a public issue.
 
-## Limitations
+---
+
+## Known limitations
 
 - Only requests are held by Intercept. Responses are shown as received.
 - The proxy speaks HTTP/1.1. HTTP/2 from the client is not negotiated.
 - WebSocket frames are relayed but not decoded in the UI.
 - Certificate-pinned apps cannot be intercepted without patching them.
+
+---
 
 ## Roadmap
 
@@ -373,6 +371,8 @@ To report a security issue, open a private security advisory on GitHub instead o
 - WebSocket frame viewer
 - HTTP/2 support
 - Saved filters and scope presets
+
+---
 
 ## Contributing
 
@@ -385,11 +385,17 @@ Issues and pull requests are welcome.
 
 Good first issues: UI wording, Termux setup notes, and new filters in History.
 
-## Acknowledgements
+---
 
-- [Caido](https://caido.io) for the UI inspiration. Caido Lite is not affiliated with Caido Labs.
-- [Termux](https://termux.dev) for making a real Linux shell possible on Android.
-- [Font Awesome](https://fontawesome.com) for the icons.
+## Built with
+
+- [Python 3](https://www.python.org/) standard library (no third-party packages)
+- [Termux](https://termux.dev) for a real Linux shell on Android
+- [OpenSSL](https://www.openssl.org) command-line tool for certificate generation
+- [Font Awesome](https://fontawesome.com) icons
+- Vanilla JavaScript, HTML and CSS for the web UI
+
+---
 
 ## License
 
